@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday My Love 🎂❤️🌸</title>
+<style>
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  overflow-x: hidden;
+  text-align: center;
+  background: radial-gradient(#ffb6c1, #ff69b4, #8b008b);
+  color: black;
+}
+header {
+  padding: 40px 20px;
+  position: relative;
+}
+header h1 {
+  font-size: 2.5rem;
+  animation: typing 4s steps(40, end), blink .75s step-end infinite;
+  white-space: nowrap;
+  overflow: hidden;
+  border-right: 3px solid white;
+  margin: auto;
+  display: inline-block;
+  color: #fff0f5;
+}
+header h2 {
+  font-size: 1.2rem;
+  animation: fadeInUp 2s ease;
+  color: #ffe4e1;
+}
+.cake {font-size: 5rem; animation: bounce 2s infinite; margin: 20px 0;}
+.love-pulse {font-size: 3rem; color: #ff1493; animation: pulse 1.5s infinite;}
+.gallery {display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; padding: 20px;}
+.gallery img {width: 100%; border-radius: 15px; transition: transform 0.6s; transform-style: preserve-3d;}
+.gallery img:hover {transform: rotateY(180deg);}
+.reasons {font-size: 1.2rem; margin: 30px auto; max-width: 500px; background: rgba(255,192,203,0.2); padding: 20px; border-radius: 15px; animation: fadeIn 3s ease; color: #fff0f5;}
+button {padding: 10px 20px; margin: 15px; font-size: 1rem; border: none; border-radius: 25px; background: #ff69b4; color: #fff; cursor: pointer; transition: 0.3s; box-shadow: 0 0 10px #ff1493, 0 0 20px #ff69b4;}
+button:hover {background: #ff1493; transform: scale(1.05); box-shadow: 0 0 20px #ff1493, 0 0 40px #ff69b4;}
+@keyframes fadeInUp {from {opacity: 0; transform: translateY(30px);} to {opacity: 1; transform: translateY(0);}}
+@keyframes bounce {0%,100% {transform: translateY(0);} 50% {transform: translateY(-15px);}}
+@keyframes pulse {0% {transform: scale(1); opacity:0.7;} 50% {transform: scale(1.3); opacity:1;} 100% {transform: scale(1); opacity:0.7;}}
+@keyframes fall {0% {transform: translateY(-10%); opacity:1;} 100% {transform: translateY(110vh); opacity:0;}}
+.falling {position: fixed; top:-10%; font-size:2rem; animation: fall linear infinite;}
+@keyframes typing {from {width:0;} to {width:100%;}}
+@keyframes blink {from, to {border-color:transparent;} 50% {border-color:white;}}
+.balloon {position: fixed; bottom:-100px; font-size:2rem; animation: rise linear infinite;}
+@keyframes rise {0% {transform: translateY(0); opacity:1;} 100% {transform: translateY(-120vh); opacity:0;}}
+canvas {position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;}
+#love-trail {position: fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:9999;}
+.countdown {margin-top:20px; font-size:1.5rem; color:#ff69b4; font-weight:bold;}
+</style>
+</head>
+<body>
+<audio autoplay loop>
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+</audio>
+<canvas id="fireworks"></canvas>
+<canvas id="love-trail"></canvas>
+<header>
+  <div class="cake">🎂</div>
+  <h1>Happy Birthday My Love bubu❤️</h1>
+  <h2>Wishing you all the happiness in the world bubu baby 🌸</h2>
+  <div class="love-pulse">❤️</div>
+  <div class="countdown" id="countdown">Loading countdown...</div>
+</header>
+<section class="gallery">
+  <img src="1.jpeg" alt="memory1">
+  <img src="2.jpeg" alt="memory2">
+  <img src="3.jpeg" alt="memory3">
+  <img src="4.jpeg" alt="memory4">
+</section>
+<section class="reasons">
+  <p id="reason-text">You make my world brighter every day  bubu 🌞</p>
+</section>
+<button onclick="showLetter()">💌 Open Love Letter</button>
+<button onclick="celebrate()">🎉 Celebrate!</button>
+<div id="letter-modal" style="display:none; position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;">
+  <div style="background:#fff0f5;padding:20px;border-radius:15px;max-width:500px;text-align:left;">
+    <h2>My Sweetheart ❤️</h2>
+    <p>My dearest love, you are the light of my life. Every day with you is magical, and I cherish every moment. Happy Birthday bubu❤️, my love! 🎂🌸💖</p>
+    <button onclick="closeLetter()">Close</button>
+  </div>
+</div>
+<script>
+// Countdown Timer
+const birthday = new Date("2025-08-28T00:00:00");
+function updateCountdown(){
+  const now = new Date();
+  const diff = birthday - now;
+  if(diff>0){
+    const days = Math.floor(diff/1000/60/60/24);
+    const hrs = Math.floor((diff/1000/60/60)%24);
+    const min = Math.floor((diff/1000/60)%60);
+    const sec = Math.floor((diff/1000)%60);
+    document.getElementById('countdown').innerText = `${days}d ${hrs}h ${min}m ${sec}s`;
+  } else {
+    document.getElementById('countdown').innerText = `🎉 Happy Birthday! 🎉`;
+  }
+}
+setInterval(updateCountdown,1000);
+
+// Love quotes rotation
+const reasons=["You make my world brighter every day 🌞","Your smile is my favorite view ❤️","You are my forever and always 💍","Every moment with you is magical ✨","You are my sunshine and my moonlight 🌙☀️"];
+let idx=0;
+setInterval(()=>{idx=(idx+1)%reasons.length; document.getElementById("reason-text").innerText=reasons[idx];},3000);
+
+function showLetter(){document.getElementById('letter-modal').style.display='flex';}
+function closeLetter(){document.getElementById('letter-modal').style.display='none';}
+
+function celebrate(){
+  // Falling emojis
+  for(let i=0;i<30;i++){
+    const el=document.createElement("div");
+    el.className="falling";
+    el.innerText=["🌸","❤️","🎂","💖","🌷"][Math.floor(Math.random()*5)];
+    el.style.left=Math.random()*100+"%";
+    el.style.animationDuration=(3+Math.random()*4)+"s";
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),7000);
+  }
+  // Balloons
+  for(let i=0;i<15;i++){
+    const b=document.createElement("div");
+    b.className="balloon";
+    b.innerText=["🎈","🎊","💖","🌹","🌺"][Math.floor(Math.random()*5)];
+    b.style.left=Math.random()*100+"%";
+    b.style.animationDuration=(5+Math.random()*5)+"s";
+    document.body.appendChild(b);
+    setTimeout(()=>b.remove(),12000);
+  }
+  // Fireworks
+  launchFireworks();
+}
+
+// Fireworks
+const canvas=document.getElementById('fireworks');
+const ctx=canvas.getContext('2d');
+canvas.width=window.innerWidth; canvas.height=window.innerHeight;
+function launchFireworks(){
+  let particles=[];
+  for(let i=0;i<150;i++){
+    particles.push({x:canvas.width/2,y:canvas.height/2,dx:(Math.random()-0.5)*8,dy:(Math.random()-0.5)*8,life:100});
+  }
+  function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach((p,i)=>{
+      ctx.fillStyle=`hsl(${Math.random()*360},100%,70%)`;
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,4,0,Math.PI*2);
+      ctx.fill();
+      p.x+=p.dx; p.y+=p.dy; p.life--;
+      if(p.life<=0) particles.splice(i,1);
+    });
+    if(particles.length>0) requestAnimationFrame(animate);
+  }
+  animate();
+}
+
+// Love Trail
+const trailCanvas=document.getElementById('love-trail');
+const tctx=trailCanvas.getContext('2d');
+trailCanvas.width=window.innerWidth; trailCanvas.height=window.innerHeight;
+let hearts=[];
+window.addEventListener('mousemove',e=>{
+  hearts.push({x:e.clientX,y:e.clientY,alpha:1});
+});
+function drawTrail(){
+  tctx.clearRect(0,0,trailCanvas.width,trailCanvas.height);
+  hearts.forEach((h,i)=>{
+    tctx.fillStyle=`rgba(255,105,180,${h.alpha})`;
+    tctx.font='22px Arial';
+    tctx.fillText('❤',h.x,h.y);
+    h.y-=1; h.alpha-=0.03;
+    if(h.alpha<=0) hearts.splice(i,1);
+  });
+  requestAnimationFrame(drawTrail);
+}
+drawTrail();
+</script>
+</body>
+</html>
